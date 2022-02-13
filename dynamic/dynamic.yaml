@@ -1,0 +1,27 @@
+http:
+    routers:
+        symfony:
+            rule: "Host(`symfony.{{env "DOMAIN"}}`)"
+            service: symfony
+            entrypoints: websecure
+            tls:
+                certResolver: "cloudflare"
+                domains:
+                    -   main: "symfony.{{env "DOMAIN"}}"
+        laravel:
+            rule: "Host(`laravel.{{env "DOMAIN"}}`)"
+            service: laravel
+            entrypoints: websecure
+            tls:
+                certResolver: "cloudflare"
+                domains:
+                    -   main: "laravel.{{env "DOMAIN"}}"
+    services:
+        symfony:
+            loadBalancer:
+                servers:
+                    -   url: "http://host.docker.internal:8000"
+        laravel:
+            loadBalancer:
+                servers:
+                    -   url: "http://host.docker.internal:8000"
